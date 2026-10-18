@@ -100,7 +100,25 @@ L'application inclut un simulateur matériel autonome avec des profils de sols r
 
 ---
 
-## 4. Architecture Technique & Matérielle
+## 4. Portail d'Administration & Supervision (Présentation & Soutenance)
+
+Pour permettre la supervision globale de la base de données et valoriser les résultats lors de la soutenance, un **Portail d'Administration Web** dédié a été mis en place (`admin/`) :
+- **Tableau de Bord KPI & Graphiques Analytiques (Chart.js)** :
+  - Évolution des inscriptions planteurs et parcelles par région (Yamoussoukro, Toumodi, Bouaké, Tiébissou).
+  - Diagnostic global d'adéquation sol/culture (% Adapté, % À corriger, % Non adapté).
+  - Profils physico-chimiques comparatifs (distribution du pH et de l'humidité volumique).
+  - Encart d'aide à la décision expliquant les impacts agronomiques (chaulage dolomitique pour les sols acides $pH < 5.8$).
+- **Catalogue Agronomique Dynamique (Gestion des Cultures)** :
+  - Ajout, modification et suppression en direct de nouvelles cultures de rente ou vivrières (ex: *Cacao, Café, Hévéa, Anacarde, Piment*) avec leurs plages optimales (pH min/max, humidité min/max, EC max, température min/max).
+  - Les nouvelles cultures ajoutées dans l'administration sont immédiatement prises en compte par le moteur d'adéquation de l'application mobile !
+- **Explorateur de Données Terrain & GPS** :
+  - Tableau interactif de tous les prélèvements avec latitude/longitude GPS, date/heure, métriques sol et liaison utilisée (BLE/Wi-Fi).
+- **Sauvegarde & Exportation BDD** :
+  - Exportation complète en un clic au format JSON/CSV et réinitialisation de test.
+
+---
+
+## 5. Architecture Technique & Matérielle
 
 ```mermaid
 graph LR
@@ -112,8 +130,13 @@ graph LR
         ESP32 -- "Liaison BLE GATT (Principal)<br/>ou Wi-Fi SoftAP (Secours)" --> MobileApp["Application Mobile PWA<br/>• Mode Offline-First (LocalStorage)<br/>• GPS téléphone & Horodatage<br/>• Moteur agronomique embarqué"]
     end
 
+    subgraph AdminPortal ["Portail Admin (Supervision / Soutenance)"]
+        Admin["Dashboard Analytique<br/>• Graphiques Chart.js<br/>• Gestion du catalogue cultures<br/>• Export BDD JSON/CSV"]
+    end
+
     subgraph Serveur ["Serveur Central (Dès retour 4G/Wi-Fi)"]
         MobileApp -. "Synchronisation REST JSON" .-> API["API Python & BDD Relationnelle<br/>(SQLite / PostgreSQL)"]
+        Admin <--> API
     end
 ```
 
@@ -129,48 +152,29 @@ graph LR
 
 ---
 
-## 5. Structure du Dépôt Git
+## 6. Structure du Dépôt Git
 
 ```
 UP PROJET/
-├── docs/                                  # Documentation d'ingénierie Cycle en V
-│   ├── 00_demarche_cycle_en_v.md          # Guide méthodologique Cycle en V
-│   ├── 01_expression_des_besoins.md       # Analyse des besoins & contexte ivoirien
-│   ├── 02_specifications_fonctionnelles.md# SFG : 7 écrans & cas d'utilisation
-│   ├── 03_specifications_techniques.md    # STD : protocoles, BDD, formules de scoring
-│   ├── 04_plan_de_tests_et_validation.md  # Plan de tests (TU, TI, TF, Recette)
-│   └── matrice_tracabilite_exigences.md   # Matrice de traçabilité des exigences
+├── index.html                             # Hub d'accueil avec accès Mobile & Admin
+├── admin/                                 # Portail d'Administration & Supervision
+│   ├── index.html                         # Dashboard complet & graphiques Chart.js
+│   ├── css/admin.css                      # Styles du tableau de bord
+│   └── js/admin.js                        # Contrôleur, graphiques & CRUD cultures
 ├── mobile-app/                            # Application Mobile (PWA Offline-First)
 │   ├── index.html                         # Interface des 7 écrans
-│   ├── css/
-│   │   └── app.css                        # Design responsive & système visuel
-│   ├── js/
-│   │   ├── app.js                         # Contrôleur applicatif
-│   │   ├── ble_service.js                 # Service Web Bluetooth LE
-│   │   ├── wifi_service.js                # Service Wi-Fi SoftAP HTTP
-│   │   ├── agronomy_engine.js             # Moteur de calcul agronomique FAO/CNRA
-│   │   ├── storage_service.js             # Persistance locale hors-ligne
-│   │   └── esp32_simulator.js             # Simulateur de capteurs sol/climat
+│   ├── css/app.css                        # Design responsive & système visuel
+│   ├── js/                                # Modules applicatifs (BLE, Wi-Fi, Storage, Moteur)
 │   ├── manifest.json                      # Configuration PWA
 │   └── service-worker.js                  # Cache pour usage 100% hors-ligne
-├── firmware/                              # Code embarqué ESP32
-│   └── ESP32_Noeud_Fertilite/
-│       ├── ESP32_Noeud_Fertilite.ino      # Firmware C++ (BLE GATT + SoftAP WebServer)
-│       ├── config.h                       # Affectation des broches & UUIDs
-│       └── README.md                      # Guide de téléversement
-├── server-api/                            # API REST & Schéma BDD
-│   ├── server.py                          # Serveur léger de synchronisation Python
-│   ├── schema.sql                         # Schéma relationnel BDD Excel
-│   └── fiches_cultures.json               # Fiches agronomiques CNRA/FAO
-├── tests/                                 # Branche montante de validation
-│   └── test_agronomy_scoring.py           # Tests unitaires du moteur de score
-├── .gitignore                             # Fichiers exclus du versionnement
-└── README.md                              # Ce guide principal
+├── docs/                                  # Documentation d'ingénierie Cycle en V
+├── firmware/                              # Code embarqué ESP32 (BLE GATT + SoftAP)
+├── server-api/                            # API REST & Schéma BDD SQLite
 ```
 
 ---
 
-## 6. Guide de Démarrage Rapide
+## 7. Guide de Démarrage Rapide
 
 ### 1. Tester l'Application Mobile Immédiatement
 Ouvrez simplement le fichier `mobile-app/index.html` dans votre navigateur Web (Chrome, Edge ou Safari) :

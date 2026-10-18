@@ -239,12 +239,35 @@ const AgronomyEngine = (function () {
   }
 
   return {
-    getCulturesDisponibles: () => Object.keys(CULTURES_REFERENCE),
-    getCultureDetails: (nom) => CULTURES_REFERENCE[nom],
+    getCulturesDisponibles: () => {
+      if (typeof StorageService !== "undefined" && StorageService.getCulturesReference) {
+        return Object.keys(StorageService.getCulturesReference());
+      }
+      return Object.keys(CULTURES_REFERENCE);
+    },
+    getCultureDetails: (nom) => {
+      if (typeof StorageService !== "undefined" && StorageService.getCulturesReference) {
+        const ref = StorageService.getCulturesReference();
+        if (ref[nom]) return ref[nom];
+      }
+      return CULTURES_REFERENCE[nom];
+    },
     calculerStatistiques: calculerStatistiques,
-    evaluerCulture: evaluerCulture,
+    evaluerCulture: (nom, stats) => {
+      // Vérifier d'abord dans StorageService pour les nouvelles cultures ajoutées par l'admin
+      if (typeof StorageService !== "undefined" && StorageService.getCulturesReference) {
+        const customRef = StorageService.getCulturesReference();
+        if (customRef && customRef[nom]) {
+          const oldRef = CULTURES_REFERENCE[nom];
+          CULTURES_REFERENCE[nom] = customRef[nom];
+          const result = evaluerCulture(nom, stats);
+          if (oldRef) CULTURES_REFERENCE[nom] = oldRef;
+          return result;
+        }
+      }
+      return evaluerCulture(nom, stats);
+    },
     analyserCampagne: analyserCampagne
-  };
 })();
 
 // Exportation pour Node.js / tests automatisés et navigateur

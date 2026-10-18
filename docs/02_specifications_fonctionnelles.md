@@ -100,6 +100,15 @@ L'ergonomie et l'architecture visuelle reprennent fidèlement les maquettes vali
   - Bouton de synchronisation manuelle vers le serveur central (dès que le téléphone capte le réseau Internet 4G ou Wi-Fi domestique).
   - Mode simulateur interactif pour démonstration et tests sans matériel.
 
+### Écran 8 (Portail Web Superviseur) : Tableau de Bord & Gestion BDD
+- **Objectif** : Outil de supervision globale pour les enseignants, chercheurs et jury de soutenance.
+- **Fonctionnalités** :
+  - **KPIs en temps réel** : Total planteurs, parcelles actives, campagnes clôturées, points de prélèvement.
+  - **Graphiques analytiques** : Évolution temporelle, distribution physico-chimique (pH vs humidité), taux d'adéquation globale des cultures, adhésion par localité.
+  - **Gestion dynamique des cultures (CRUD)** : Ajout / édition / suppression de cultures cibles (ex: cacao, anacarde, piment) avec mise à jour immédiate du moteur agronomique mobile.
+  - **Explorateur de données géographiques** : Consultation de chaque point relevé avec coordonnées GPS et paramètres NPK.
+  - **Exportation / Restauration** : Sauvegarde JSON/CSV de toute la base de données.
+
 ---
 
 ## 3. Exigences Non-Fonctionnelles

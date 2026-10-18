@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portail d'Administration & Supervision - Fertilité du Sol (INP-HB)</title>
+  <link rel="stylesheet" href="css/admin.css">
+  <!-- Chart.js pour les graphiques analytiques de soutenance -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- Sidebar latérale -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-brand">
+      <div style="width:36px;height:36px;border-radius:8px;background:var(--primary);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;">
+        🌱
+      </div>
+      <div>
+        <h2>AgroSol Admin</h2>
+        <span>INP-HB · ESI Yamoussoukro</span>
+      </div>
+    </div>
+
+    <ul class="sidebar-menu">
+      <li class="menu-item active" data-section="pane-dashboard">
+        📊 Tableau de Bord
+      </li>
+      <li class="menu-item" data-section="pane-cultures">
+        🌾 Catalogue Cultures
+      </li>
+      <li class="menu-item" data-section="pane-users">
+        👨‍🌾 Planteurs & Utilisateurs
+      </li>
+      <li class="menu-item" data-section="pane-mesures">
+        📍 Relevés & Données GPS
+      </li>
+      <li class="menu-item" data-section="pane-backup">
+        💾 Exportation & Base
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <b>UP Projet Fertilité Sol</b><br>
+      Encadrant : M. DIOMANDE S. R.<br>
+      Chef : ALI KOUAKOU A. P. N.
+    </div>
+  </aside>
+
+  <!-- Contenu Principal -->
+  <main class="admin-main">
+    <!-- En-tête -->
+    <header class="admin-header">
+      <h1 id="admin-page-title">Tableau de Bord & Métriques Clés</h1>
+      <div class="admin-header-actions">
+        <span class="badge badge-success" style="padding:6px 12px;font-size:12px;">● Base de données synchronisée</span>
+        <a href="../mobile-app/" class="btn btn-primary" target="_blank">
+          📱 Ouvrir l'App Mobile
+        </a>
+      </div>
+    </header>
+
+    <div class="content-body">
+
+      <!-- ========================================== -->
+      <!-- SECTION 1 : TABLEAU DE BORD (DASHBOARD)    -->
+      <!-- ========================================== -->
+      <section id="pane-dashboard" class="section-pane active">
+        <!-- Cartes KPI -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <span class="kpi-label">Planteurs / Utilisateurs</span>
+            <div id="kpi-users" class="kpi-value">-</div>
+            <span class="kpi-desc">Exploitants agricoles enregistrés</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">Parcelles Suivies</span>
+            <div id="kpi-parcelles" class="kpi-value">-</div>
+            <span class="kpi-desc">Champs cartographiés</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">Campagnes Réalisées</span>
+            <div id="kpi-campagnes" class="kpi-value">-</div>
+            <span class="kpi-desc">Sessions de mesure clôturées</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">Points Mesurés</span>
+            <div id="kpi-mesures" class="kpi-value">-</div>
+            <span class="kpi-desc">Relevés capteurs avec GPS</span>
+          </div>
+        </div>
+
+        <!-- Encart d'aide à la décision pour soutenance -->
+        <div class="callout">
+          <b>🎯 Synthèse d'aide à la décision pour la soutenance :</b><br>
+          Les données collectées confirment une forte hétérogénéité pédologique en Côte d'Ivoire. Sur les parcelles de transition (Yamoussoukro), plus de 60% des relevés mettent en évidence une <b>acidité limitante ($pH < 5.8$)</b> nécessitant un chaulage pour le maïs et la tomate, tandis que les bas-fonds présentent une humidité idéale pour le riz pluvial mais asphyxiante pour les tubercules.
+        </div>
+
+        <!-- Grille des Graphiques -->
+        <div class="charts-grid">
+          <!-- Graphe 1 : Adéquation des Cultures -->
+          <div class="chart-card">
+            <div class="chart-header">
+              <span class="chart-title">Diagnostic Global d'Adéquation Sol / Culture</span>
+            </div>
+            <div class="chart-box">
+              <canvas id="chart-adequation"></canvas>
+            </div>
+          </div>
+
+          <!-- Graphe 2 : Répartition des Parcelles par Localité -->
+          <div class="chart-card">
+            <div class="chart-header">
+              <span class="chart-title">Répartition des Parcelles par Localité</span>
+            </div>
+            <div class="chart-box">
+              <canvas id="chart-localites"></canvas>
+            </div>
+          </div>
+
+          <!-- Graphe 3 : Distribution pH vs Humidité des Sols -->
+          <div class="chart-card">
+            <div class="chart-header">
+              <span class="chart-title">Profils Physico-Chimiques Relevés (pH & Humidité)</span>
+            </div>
+            <div class="chart-box">
+              <canvas id="chart-soil-distribution"></canvas>
+            </div>
+          </div>
+
+          <!-- Graphe 4 : Évolution Temporelle des Utilisateurs -->
+          <div class="chart-card">
+            <div class="chart-header">
+              <span class="chart-title">Évolution des Adhésions Utilisateurs</span>
+            </div>
+            <div class="chart-box">
+              <canvas id="chart-users-timeline"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- SECTION 2 : CATALOGUE CULTURES (CRUD)      -->
+      <!-- ========================================== -->
+      <section id="pane-cultures" class="section-pane">
+        <div class="table-card">
+          <div class="table-header-bar">
+            <div>
+              <h3 style="font-size:15px;font-weight:700;">Référentiel Agronomique (FAO EcoCrop / CNRA)</h3>
+              <p style="font-size:12px;color:var(--text-muted);margin-top:2px;">
+                Seuils utilisés par le moteur d'adéquation pour évaluer la fertilité des terres ivoiriennes.
+              </p>
+            </div>
+            <button id="btn-open-modal-culture" class="btn btn-primary">
+              + Ajouter une culture
+            </button>
+          </div>
+
+          <div style="overflow-x:auto;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Culture</th>
+                  <th>Plage pH Favorable</th>
+                  <th>Humidité Sol (% VWC)</th>
+                  <th>Salinité Max (EC)</th>
+                  <th>Température Sol</th>
+                  <th>Source Référentielle</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="table-cultures-body">
+                <!-- Rempli dynamiquement -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- SECTION 3 : GESTION DES PLANTEURS / USERS  -->
+      <!-- ========================================== -->
+      <section id="pane-users" class="section-pane">
+        <div class="table-card">
+          <div class="table-header-bar">
+            <div>
+              <h3 style="font-size:15px;font-weight:700;">Comptes Planteurs & Techniciens Agricoles</h3>
+              <p style="font-size:12px;color:var(--text-muted);margin-top:2px;">
+                Liste des acteurs utilisant le dispositif de mesure sur leurs exploitations.
+              </p>
+            </div>
+            <button id="btn-add-user-modal" class="btn btn-primary">
+              + Ajouter un planteur
+            </button>
+          </div>
+
+          <div style="overflow-x:auto;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nom & Prénoms</th>
+                  <th>Rôle</th>
+                  <th>Localité / Zone</th>
+                  <th>Contact</th>
+                  <th>Parcelles</th>
+                  <th>Date d'inscription</th>
+                </tr>
+              </thead>
+              <tbody id="table-users-body">
+                <!-- Rempli dynamiquement -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- SECTION 4 : DONNÉES TERRAIN & GPS          -->
+      <!-- ========================================== -->
+      <section id="pane-mesures" class="section-pane">
+        <div class="table-card">
+          <div class="table-header-bar">
+            <div>
+              <h3 style="font-size:15px;font-weight:700;">Historique Complet des Relevés Capteurs ESP32</h3>
+              <p style="font-size:12px;color:var(--text-muted);margin-top:2px;">
+                Points de prélèvement avec géolocalisation GPS, horodatage et paramètres physico-chimiques.
+              </p>
+            </div>
+          </div>
+
+          <div style="overflow-x:auto;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Point #</th>
+                  <th>Parcelle</th>
+                  <th>Horodatage</th>
+                  <th>Coordonnées GPS</th>
+                  <th>Humidité</th>
+                  <th>pH</th>
+                  <th>Conductivité (EC)</th>
+                  <th>Temp.</th>
+                  <th>NPK (mg/kg)</th>
+                  <th>Liaison</th>
+                </tr>
+              </thead>
+              <tbody id="table-mesures-body">
+                <!-- Rempli dynamiquement -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- SECTION 5 : SAUVEGARDE & EXPORT BDD        -->
+      <!-- ========================================== -->
+      <section id="pane-backup" class="section-pane">
+        <div class="chart-card">
+          <h3 style="font-size:15px;font-weight:700;">Sauvegarde & Exportation des Données</h3>
+          <p style="font-size:13px;color:var(--text-muted);">
+            Vous pouvez exporter l'intégralité des données (utilisateurs, parcelles, campagnes, mesures, cultures) au format JSON standard pour archivage ou traitement externe sous Excel / Python / R.
+          </p>
+          <div style="display:flex;gap:12px;margin-top:10px;">
+            <button id="btn-export-json" class="btn btn-primary">
+              📥 Télécharger l'export BDD (JSON)
+            </button>
+            <button id="btn-reset-database" class="btn btn-danger">
+              ⚠️ Réinitialiser avec les données BDD Excel
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Modal : Ajouter une Culture -->
+  <div id="modal-add-culture" class="modal-backdrop">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 style="font-size:15px;font-weight:700;">Ajouter une Culture au Catalogue</h3>
+        <button id="btn-close-modal-culture" style="background:none;border:none;font-size:18px;cursor:pointer;">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Nom de la culture :</label>
+          <input type="text" id="input-culture-nom" placeholder="Ex: Cacao, Anacarde, Piment, Café">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>pH Minimum :</label>
+            <input type="number" id="input-culture-ph-min" step="0.1" value="5.5">
+          </div>
+          <div class="form-group">
+            <label>pH Maximum :</label>
+            <input type="number" id="input-culture-ph-max" step="0.1" value="7.0">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Humidité Sol Min (% VWC) :</label>
+            <input type="number" id="input-culture-h-min" step="1" value="20">
+          </div>
+          <div class="form-group">
+            <label>Humidité Sol Max (% VWC) :</label>
+            <input type="number" id="input-culture-h-max" step="1" value="35">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Conductivité Max (µS/cm) :</label>
+            <input type="number" id="input-culture-ec-max" step="100" value="1800">
+          </div>
+          <div class="form-group">
+            <label>Source / Référence :</label>
+            <input type="text" id="input-culture-source" value="CNRA / FAO EcoCrop">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Temp. Sol Min (°C) :</label>
+            <input type="number" id="input-culture-temp-min" step="1" value="20">
+          </div>
+          <div class="form-group">
+            <label>Temp. Sol Max (°C) :</label>
+            <input type="number" id="input-culture-temp-max" step="1" value="32">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Conseils agronomiques & points clés :</label>
+          <textarea id="input-culture-points-cles" rows="2" placeholder="Sensibilité aux sols acides, besoins en eau à la floraison..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-save-culture" class="btn btn-primary">Enregistrer la culture</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts du modèle de données et contrôleur Admin -->
+  <script src="../mobile-app/js/storage_service.js"></script>
+  <script src="../mobile-app/js/agronomy_engine.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

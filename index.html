@@ -2,52 +2,156 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="refresh" content="0; url=mobile-app/">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fertilité du Sol - INP-HB</title>
+  <title>Système d'Automatisation de Mesure de Fertilité du Sol - INP-HB</title>
   <style>
+    :root {
+      --primary: #2d7a4f;
+      --primary-hover: #225e3c;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
-      margin: 0;
-      background: #f4f6f3;
-      color: #1f2937;
+      padding: 24px;
+    }
+    .header-box {
       text-align: center;
-      padding: 20px;
+      max-width: 680px;
+      margin-bottom: 28px;
     }
-    .card {
-      background: #ffffff;
-      padding: 32px;
-      border-radius: 16px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-      max-width: 420px;
-    }
-    h1 { font-size: 20px; margin-bottom: 8px; color: #2d7a4f; }
-    p { font-size: 14px; color: #6b7280; margin-bottom: 24px; }
-    a.btn {
+    .badge-inphb {
       display: inline-block;
-      background: #2d7a4f;
-      color: #ffffff;
-      padding: 12px 24px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 600;
+      background: #e8f5ed;
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 9999px;
+      margin-bottom: 12px;
+    }
+    h1 {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 8px;
+    }
+    p.subtitle {
       font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .grid-portals {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      max-width: 720px;
+      width: 100%;
+    }
+    .portal-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 26px;
+      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      text-decoration: none;
+      color: inherit;
+    }
+    .portal-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px -3px rgb(0 0 0 / 0.1);
+      border-color: var(--primary);
+    }
+    .card-icon {
+      font-size: 32px;
+      margin-bottom: 14px;
+    }
+    .card-title {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+    .card-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 18px;
+      flex: 1;
+    }
+    .card-action {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .footer-credits {
+      margin-top: 32px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.6;
     }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>Fertilité du Sol - INP-HB</h1>
-    <p>Redirection automatique vers l'application mobile de relève des capteurs ESP32...</p>
-    <a class="btn" href="mobile-app/">Ouvrir l'Application Mobile</a>
+
+  <div class="header-box">
+    <div class="badge-inphb">INP-HB · ESI (STIC & STGI) · UP PROJET</div>
+    <h1>Système d'Automatisation de Mesure de Fertilité des Sols</h1>
+    <p class="subtitle">
+      Conception et réalisation d'un dispositif cyber-physique autonome (ESP32 solaire + capteurs sol) et de sa plateforme d'évaluation agronomique des terres agricoles ivoiriennes.
+    </p>
   </div>
-  <script>
-    window.location.href = "mobile-app/";
-  </script>
+
+  <div class="grid-portals">
+    <!-- Carte 1 : Application Mobile -->
+    <a href="mobile-app/" class="portal-card">
+      <div class="card-icon">📱</div>
+      <div class="card-title">Application Mobile Planteur</div>
+      <div class="card-desc">
+        Interface terrain mobile-first (Offline-First). Relève temps réel en Bluetooth BLE ou Wi-Fi SoftAP, géolocalisation GPS, enregistrement des points et diagnostic immédiat d'adéquation sol/culture.
+      </div>
+      <div class="card-action">
+        Lancer l'Application Mobile &rarr;
+      </div>
+    </a>
+
+    <!-- Carte 2 : Portail Admin & Soutenance -->
+    <a href="admin/" class="portal-card">
+      <div class="card-icon">📊</div>
+      <div class="card-title">Portail Admin & Supervision</div>
+      <div class="card-desc">
+        Dashboard analytique pour présentation et soutenance. Graphiques dynamiques (Chart.js), gestion du catalogue de cultures (FAO/CNRA), suivi des planteurs, historique GPS et export de la base de données.
+      </div>
+      <div class="card-action">
+        Ouvrir le Tableau de Bord Admin &rarr;
+      </div>
+    </a>
+  </div>
+
+  <div class="footer-credits">
+    <b>Encadrant :</b> M. DIOMANDE SAHI ROLAND &nbsp;|&nbsp; <b>Chef de projet :</b> ALI KOUAKOU ANGE PARFAIT N.<br>
+    Référentiels agronomiques basés sur la FAO EcoCrop et les fiches techniques du CNRA / ANADER.
+  </div>
+
 </body>
 </html>
