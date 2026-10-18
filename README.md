@@ -12,6 +12,7 @@
 >                 ** KOUSSOUBE DAOUDA (STIC)
 >                 ** SERI KOUBI GNAHOUA JUNIOR (STGI)
 >                 ** TRAORE DJIBRIL ZANA (STGI)
+> 
 > **Référentiel agronomique :** FAO EcoCrop & fiches techniques CNRA / ANADER (Côte d'Ivoire)
 
 ---
