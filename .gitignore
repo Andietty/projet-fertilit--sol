@@ -1,0 +1,23 @@
+# Environnements et temporaires
+__pycache__/
+*.pyc
+*.pyo
+.env
+.venv/
+env/
+venv/
+node_modules/
+
+# OS et éditeurs
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.bak
+*.tmp
+
+# Logs et builds
+*.log
+dist/
+build/
