@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Fertilité du Sol - Application Mobile INP-HB</title>
+  <meta name="theme-color" content="#2d7a4f">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+  <!-- Boîtier Smartphone Simulé pour affichage Responsive -->
+  <div class="mobile-device-container">
+
+    <!-- Barre supérieure smartphone -->
+    <div class="phone-top-bar">
+      <span>09:41</span>
+      <div class="phone-speaker-notch"></div>
+      <div style="display:flex;gap:4px;align-items:center;">
+        <span style="font-size:10px">BLE/Wi-Fi</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 19H19.65l-.62-1.39C20.26 16.07 21 14.12 21 12c0-4.97-4.03-9-9-9zm0 14c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- En-tête applicatif dynamique -->
+    <header class="app-header">
+      <div class="app-header-title">
+        <button id="header-back-btn" class="back-btn" style="display:none;" title="Retour">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M15 18l-6-6 6-6"/>
+          </svg>
+        </button>
+        <span id="header-title">Mes parcelles</span>
+      </div>
+      <div id="header-status-pill" class="status-badge-live">
+        <span class="status-dot-pulse"></span>
+        <span id="status-pill-text">Simulateur ESP32</span>
+      </div>
+    </header>
+
+    <!-- Zone principale contenant les 7 écrans -->
+    <main class="screen-viewport">
+
+      <!-- ========================================== -->
+      <!-- ÉCRAN 1 : ACCUEIL (MES PARCELLES)         -->
+      <!-- ========================================== -->
+      <section id="screen-accueil" class="screen-view active">
+        <div class="banner-info">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+          </svg>
+          <span>Sélectionnez une parcelle pour lancer une campagne de mesure de fertilité.</span>
+        </div>
+
+        <div id="parcelles-list-container" style="display:flex;flex-direction:column;gap:10px;">
+          <!-- Injecté dynamiquement par JS -->
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:auto;">
+          <button id="btn-nouvelle-campagne-accueil" class="btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Nouvelle campagne
+          </button>
+          <button id="btn-add-parcelle-modal" class="btn-secondary">
+            + Ajouter une nouvelle parcelle
+          </button>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- ÉCRAN 2 : NOUVELLE CAMPAGNE                -->
+      <!-- ========================================== -->
+      <section id="screen-nouvelle-campagne" class="screen-view">
+        <div class="card">
+          <div class="form-group">
+            <label class="form-label" for="select-campagne-parcelle">Parcelle concernée</label>
+            <select id="select-campagne-parcelle" class="form-input">
+              <!-- Options de parcelles injectées dynamiquement -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Cultures candidates à évaluer</label>
+            <div id="crops-chips-container" class="chips-group">
+              <!-- Chips de cultures injectées dynamiquement -->
+            </div>
+            <span style="font-size:11px;color:var(--text-muted)">Touchez une culture pour l'ajouter ou la retirer de l'analyse.</span>
+          </div>
+        </div>
+
+        <button id="btn-start-campagne" class="btn-primary" style="margin-top:auto;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+          Démarrer la campagne
+        </button>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- ÉCRAN 3 : MESURE EN COURS (ACQUISITION)   -->
+      <!-- ========================================== -->
+      <section id="screen-mesure-en-cours" class="screen-view">
+        <!-- Grille 2x2 des métriques en direct -->
+        <div class="metrics-grid-2x2">
+          <div class="metric-box">
+            <div class="metric-label">Humidité sol</div>
+            <div id="live-val-humidity" class="metric-value">25.0%</div>
+            <div class="metric-unit">Volumique (% VWC)</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">pH du sol</div>
+            <div id="live-val-ph" class="metric-value" style="color:var(--primary)">6.10</div>
+            <div class="metric-unit">Acidité / Alcalinité</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">Conductivité (EC)</div>
+            <div id="live-val-ec" class="metric-value">980 µS</div>
+            <div class="metric-unit">Salinité & Ions</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">Température sol</div>
+            <div id="live-val-temp" class="metric-value">27.0 °C</div>
+            <div class="metric-unit">Thermique racinaire</div>
+          </div>
+        </div>
+
+        <!-- Coordonnées GPS et Compteur de points -->
+        <div class="card" style="padding:10px 14px;background:var(--surface-2)">
+          <div class="row-between">
+            <span id="measure-points-counter" style="font-size:13px;font-weight:700;color:var(--primary)">0 point enregistré</span>
+            <span id="live-gps-display" style="font-size:11px;color:var(--text-muted)">GPS actif...</span>
+          </div>
+        </div>
+
+        <!-- Boutons d'actions terrain -->
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:auto;">
+          <button id="btn-record-point" class="btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+              <polyline points="17 21 17 13 7 13 7 21"/>
+              <polyline points="7 3 7 8 15 8"/>
+            </svg>
+            Enregistrer le point
+          </button>
+          <button id="btn-finish-campagne" class="btn-secondary" style="border-color:var(--primary);color:var(--primary)">
+            Clôturer et analyser la campagne
+          </button>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- ÉCRAN 4 : RÉSULTATS & RECOMMANDATIONS      -->
+      <!-- ========================================== -->
+      <section id="screen-resultats" class="screen-view">
+        <div class="card" style="background:var(--surface-2)">
+          <div style="font-size:14px;font-weight:700;color:var(--text-main)" id="resultats-parcelle-title">Synthèse de la parcelle</div>
+          <div id="resultats-stats-summary" style="font-size:11.5px;color:var(--text-muted);margin-top:4px">
+            Calcul en cours...
+          </div>
+        </div>
+
+        <div style="font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;margin:4px 0 2px">
+          Classement des cultures candidates
+        </div>
+
+        <div id="resultats-crops-cards" style="display:flex;flex-direction:column;gap:10px;">
+          <!-- Cartes de chaque culture avec badges et recommandations -->
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- ÉCRAN 5 : HISTORIQUE DES CAMPAGNES         -->
+      <!-- ========================================== -->
+      <section id="screen-historique" class="screen-view">
+        <div style="font-size:12px;font-weight:600;color:var(--text-muted)">
+          Campagnes passées sur vos parcelles
+        </div>
+        <div id="historique-list-container" style="display:flex;flex-direction:column;gap:10px;">
+          <!-- Liste injectée dynamiquement -->
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- ÉCRAN 6 : DÉTAIL D'UNE PARCELLE            -->
+      <!-- ========================================== -->
+      <section id="screen-detail-parcelle" class="screen-view">
+        <div class="card">
+          <div id="detail-parcelle-name" style="font-size:16px;font-weight:700;margin-bottom:8px">Champ Nord</div>
+          <div style="display:flex;flex-direction:column;gap:8px;font-size:12.5px">
+            <div class="row-between" style="border-bottom:1px solid var(--border);padding-bottom:6px">
+              <span style="color:var(--text-muted)">Dernière campagne</span>
+              <span id="detail-last-campagne-info" style="font-weight:600">-</span>
+            </div>
+            <div class="row-between" style="border-bottom:1px solid var(--border);padding-bottom:6px">
+              <span style="color:var(--text-muted)">Moyennes sol</span>
+              <span id="detail-averages-info" style="font-weight:600">-</span>
+            </div>
+            <div class="row-between">
+              <span style="color:var(--text-muted)">Cultures évaluées</span>
+              <span id="detail-crops-evaluated" style="font-weight:600">-</span>
+            </div>
+          </div>
+        </div>
+
+        <button id="btn-new-campagne-here" class="btn-primary" style="margin-top:auto;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Nouvelle campagne sur cette parcelle
+        </button>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- ÉCRAN 7 : WI-FI DE SECOURS & CONFIG NOEUD  -->
+      <!-- ========================================== -->
+      <section id="screen-wifi-secours" class="screen-view">
+        <div class="card" style="display:flex;flex-direction:column;gap:12px;">
+          <div class="row-between">
+            <div>
+              <div style="font-size:13px;font-weight:600">Bluetooth Low Energy (BLE)</div>
+              <div style="font-size:11px;color:var(--text-muted)">Liaison nominale au champ</div>
+            </div>
+            <div id="toggle-ble" class="toggle-switch active"></div>
+          </div>
+
+          <div class="row-between">
+            <div>
+              <div style="font-size:13px;font-weight:600">Wi-Fi de Secours (SoftAP)</div>
+              <div style="font-size:11px;color:var(--text-muted)">Réseau HTTP NOEUD-SOL-01</div>
+            </div>
+            <div id="toggle-wifi" class="toggle-switch"></div>
+          </div>
+
+          <div class="row-between">
+            <div>
+              <div style="font-size:13px;font-weight:600">Simulateur ESP32 Virtuel</div>
+              <div style="font-size:11px;color:var(--text-muted)">Pour tests sans matériel physique</div>
+            </div>
+            <div id="toggle-sim" class="toggle-switch active"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div style="font-size:12px;font-weight:600;margin-bottom:8px">Profil de Sol Simulé :</div>
+          <select id="sim-profile-select" class="form-input">
+            <option value="equilibre">Sol Équilibré (Idéal Igname/Maïs)</option>
+            <option value="acide">Sol Ferrallitique Acide (Chaulage requis)</option>
+            <option value="humide">Sol de Bas-Fond / Engorgé (Riz pluvial)</option>
+            <option value="sec">Sol Sec / Déficit Hydrique (Irrigation requise)</option>
+          </select>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:6px">
+            Changez de profil pour observer immédiatement l'adaptation du diagnostic agronomique !
+          </div>
+        </div>
+
+        <div class="card" style="background:var(--surface-2);font-size:11.5px;color:var(--text-muted)">
+          <b>Informations Nœud ESP32 :</b><br>
+          • Service GATT BLE : <code>4fafc201-1fb5-459e-8fcc-c5c9c331914b</code><br>
+          • Wi-Fi SoftAP SSID : <code>NOEUD-SOL-01</code> (Pass: <code>agro12345</code>)<br>
+          • Adresse IP Nœud : <code>192.168.4.1</code>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Barre de navigation inférieure (Tab Bar) -->
+    <nav class="phone-bottom-nav">
+      <button id="tab-accueil" class="nav-tab active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span>Parcelles</span>
+      </button>
+
+      <button id="tab-historique" class="nav-tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+        <span>Historique</span>
+      </button>
+
+      <button id="tab-connexion" class="nav-tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
+          <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
+          <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+          <line x1="12" y1="20" x2="12.01" y2="20"/>
+        </svg>
+        <span>Nœud & Wi-Fi</span>
+      </button>
+    </nav>
+
+  </div>
+
+  <!-- Scripts de l'application -->
+  <script src="js/agronomy_engine.js"></script>
+  <script src="js/storage_service.js"></script>
+  <script src="js/esp32_simulator.js"></script>
+  <script src="js/ble_service.js"></script>
+  <script src="js/wifi_service.js"></script>
+  <script src="js/app.js"></script>
+
+  <!-- Enregistrement Service Worker pour PWA Hors-Ligne -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("service-worker.js")
+          .then(reg => console.log("ServiceWorker enregistré pour usage hors-ligne"))
+          .catch(err => console.log("ServiceWorker non activé :", err));
+      });
+    }
+  </script>
+</body>
+</html>
