@@ -1,0 +1,74 @@
+{
+  "Manioc": {
+    "ph_min": 5.0,
+    "ph_max": 7.0,
+    "ph_opt_min": 5.5,
+    "ph_opt_max": 7.0,
+    "humidite_min_pct": 20,
+    "humidite_max_pct": 35,
+    "ec_max_us_cm": 2000,
+    "temp_min_c": 25,
+    "temp_max_c": 29,
+    "source": "CNRA / FAO EcoCrop"
+  },
+  "Igname": {
+    "ph_min": 5.5,
+    "ph_max": 6.5,
+    "ph_opt_min": 5.5,
+    "ph_opt_max": 6.5,
+    "humidite_min_pct": 25,
+    "humidite_max_pct": 40,
+    "ec_max_us_cm": 1500,
+    "temp_min_c": 25,
+    "temp_max_c": 30,
+    "source": "CNRA / FAO EcoCrop"
+  },
+  "Riz pluvial": {
+    "ph_min": 5.0,
+    "ph_max": 6.5,
+    "ph_opt_min": 5.5,
+    "ph_opt_max": 6.5,
+    "humidite_min_pct": 30,
+    "humidite_max_pct": 45,
+    "ec_max_us_cm": 3000,
+    "temp_min_c": 25,
+    "temp_max_c": 30,
+    "source": "CNRA / FAO EcoCrop"
+  },
+  "Maïs": {
+    "ph_min": 5.8,
+    "ph_max": 7.0,
+    "ph_opt_min": 5.8,
+    "ph_opt_max": 7.0,
+    "humidite_min_pct": 20,
+    "humidite_max_pct": 30,
+    "ec_max_us_cm": 1700,
+    "temp_min_c": 20,
+    "temp_max_c": 30,
+    "source": "CNRA / FAO EcoCrop"
+  },
+  "Banane plantain": {
+    "ph_min": 5.5,
+    "ph_max": 7.0,
+    "ph_opt_min": 5.5,
+    "ph_opt_max": 7.0,
+    "humidite_min_pct": 30,
+    "humidite_max_pct": 45,
+    "ec_max_us_cm": 1500,
+    "temp_min_c": 25,
+    "temp_max_c": 30,
+    "source": "CNRA / FAO EcoCrop"
+  },
+  "Tomate": {
+    "ph_min": 6.0,
+    "ph_max": 6.8,
+    "ph_opt_min": 6.0,
+    "ph_opt_max": 6.8,
+    "humidite_min_pct": 20,
+    "humidite_max_pct": 30,
+    "ec_max_us_cm": 2500,
+    "temp_min_c": 18,
+    "temp_max_c": 27,
+    "source": "FAO EcoCrop"
+  }
+}
