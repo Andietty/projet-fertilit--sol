@@ -7,11 +7,7 @@
 
 > **Projet d'Ingénierie (UP Projet - 1ère Année Ingénieur)**  
 > **Encadrant :** M. DIOMANDE SAHI ROLAND  
-> **Participants :** ALI KOUAKOU ANGE PARFAIT N. (STGI)
->                 ** ANDIETTY KOBENAN J. ISIDORE (STIC)
->                 ** KOUSSOUBE DAOUDA (STIC)
->                 ** SERI KOUBI GNAHOUA JUNIOR (STGI)
->                 ** TRAORE DJIBRIL ZANA (STGI)
+> **Participants :** ALI KOUAKOU ANGE PARFAIT N. (STGI) ** ANDIETTY KOBENAN J. ISIDORE (STIC) ** KOUSSOUBE DAOUDA (STIC) ** SERI KOUBI GNAHOUA JUNIOR (STGI) ** TRAORE DJIBRIL ZANA (STGI)
 > 
 > **Référentiel agronomique :** FAO EcoCrop & fiches techniques CNRA / ANADER (Côte d'Ivoire)
 

@@ -4,7 +4,7 @@
 **Établissement :** Institut National Polytechnique Félix Houphouët-Boigny (INP-HB) - ESI  
 **Filières :** STIC & STGI (Ingénieur 1ère année)  
 **Encadrant :** M. DIOMANDE SAHI ROLAND  
-**Chef de projet :** ALI KOUAKOU ANGE PARFAIT N.  
+**Participants :** ALI KOUAKOU ANGE PARFAIT N. (STGI) ** ANDIETTY KOBENAN J. ISIDORE (STIC) ** KOUSSOUBE DAOUDA (STIC) ** SERI KOUBI GNAHOUA JUNIOR (STGI) ** TRAORE DJIBRIL ZANA (STGI)  
 
 ---
 

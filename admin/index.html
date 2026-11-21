@@ -43,7 +43,14 @@
     <div class="sidebar-footer">
       <b>UP Projet Fertilité Sol</b><br>
       Encadrant : M. DIOMANDE S. R.<br>
-      Chef : ALI KOUAKOU A. P. N.
+      <div style="font-size:10.5px;margin-top:6px;line-height:1.35;color:var(--text-muted);border-top:1px solid rgba(255,255,255,0.08);padding-top:6px;">
+        <b>Participants :</b><br>
+        ALI KOUAKOU A. P. N. (STGI)<br>
+        ANDIETTY K. J. I. (STIC)<br>
+        KOUSSOUBE D. (STIC)<br>
+        SERI K. G. J. (STGI)<br>
+        TRAORE D. Z. (STGI)
+      </div>
     </div>
   </aside>
 
@@ -54,6 +61,7 @@
       <h1 id="admin-page-title">Tableau de Bord & Métriques Clés</h1>
       <div class="admin-header-actions">
         <span class="badge badge-success" style="padding:6px 12px;font-size:12px;">● Base de données synchronisée</span>
+        <button id="btn-admin-logout" class="btn btn-secondary" style="padding:6px 12px;font-size:12px;margin-right:8px;" title="Verrouiller la session admin">🔒 Verrouiller</button>
         <a href="../mobile-app/" class="btn btn-primary" target="_blank">
           📱 Ouvrir l'App Mobile
         </a>
@@ -336,6 +344,36 @@
       </div>
       <div class="modal-footer">
         <button id="btn-save-culture" class="btn btn-primary">Enregistrer la culture</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal d'authentification Admin par mot de passe -->
+  <div id="admin-auth-overlay" class="admin-auth-overlay" style="display:none;">
+    <div class="admin-auth-card">
+      <div class="admin-auth-icon">🔐</div>
+      <h2>Portail d'Administration & Supervision</h2>
+      <p style="font-size:12.5px;color:var(--text-muted);margin:8px 0 16px;">
+        Veuillez entrer le mot de passe administrateur pour accéder aux données et graphiques de supervision.
+      </p>
+      <form onsubmit="event.preventDefault(); window.checkAdminAuth();">
+        <div style="margin-bottom:12px;text-align:left;">
+          <label for="admin-auth-pwd" style="display:block;font-size:12px;font-weight:600;margin-bottom:6px;color:var(--text-muted);">
+            Mot de passe administrateur :
+          </label>
+          <input type="password" id="admin-auth-pwd" class="admin-auth-input" placeholder="Entrez le mot de passe..." autocomplete="current-password" required>
+        </div>
+        <div id="admin-auth-error" class="admin-auth-error" style="display:none;">
+          Mot de passe incorrect. Veuillez réessayer.
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;padding:10px 14px;font-size:14px;margin-top:6px;">
+          Déverrouiller le portail &rarr;
+        </button>
+      </form>
+      <div style="margin-top:16px;">
+        <a href="../mobile-app/" style="font-size:12px;color:var(--primary);text-decoration:none;font-weight:600;">
+          &larr; Revenir à l'application mobile
+        </a>
       </div>
     </div>
   </div>

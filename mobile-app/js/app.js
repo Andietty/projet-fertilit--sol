@@ -554,6 +554,57 @@ document.addEventListener("DOMContentLoaded", () => {
     navTabs.connexion.addEventListener("click", () => navigateTo("screen-wifi-secours", "Connexion au nœud"));
   }
 
+  // --- ACCÈS ADMIN SÉCURISÉ PAR MOT DE PASSE ---
+  const ADMIN_PWD_1 = "26INP";
+  const ADMIN_PWD_2 = "26INPfertilitesol";
+
+  const modalMobileAdmin = document.getElementById("modal-mobile-admin");
+  const inputMobileAdminPwd = document.getElementById("input-mobile-admin-pwd");
+  const msgMobileAdminError = document.getElementById("msg-mobile-admin-error");
+  const btnCloseAdminModal = document.getElementById("btn-close-admin-modal");
+  const btnCancelAdminModal = document.getElementById("btn-cancel-admin-modal");
+  const headerAdminLock = document.getElementById("header-admin-lock");
+  const btnAdminAccessSettings = document.getElementById("btn-admin-access-settings");
+
+  function openAdminModal() {
+    if (modalMobileAdmin) {
+      modalMobileAdmin.style.display = "flex";
+      if (msgMobileAdminError) msgMobileAdminError.style.display = "none";
+      if (inputMobileAdminPwd) {
+        inputMobileAdminPwd.value = "";
+        setTimeout(() => inputMobileAdminPwd.focus(), 150);
+      }
+    }
+  }
+
+  function closeAdminModal() {
+    if (modalMobileAdmin) {
+      modalMobileAdmin.style.display = "none";
+      if (inputMobileAdminPwd) inputMobileAdminPwd.value = "";
+      if (msgMobileAdminError) msgMobileAdminError.style.display = "none";
+    }
+  }
+
+  window.checkMobileAdminAuth = function () {
+    const entered = inputMobileAdminPwd ? inputMobileAdminPwd.value.trim() : "";
+    if (entered === ADMIN_PWD_1 || entered === ADMIN_PWD_2) {
+      sessionStorage.setItem("agro_admin_authenticated", "true");
+      closeAdminModal();
+      window.location.href = "../admin/";
+    } else {
+      if (msgMobileAdminError) msgMobileAdminError.style.display = "block";
+      if (inputMobileAdminPwd) {
+        inputMobileAdminPwd.value = "";
+        inputMobileAdminPwd.focus();
+      }
+    }
+  };
+
+  if (headerAdminLock) headerAdminLock.addEventListener("click", openAdminModal);
+  if (btnAdminAccessSettings) btnAdminAccessSettings.addEventListener("click", openAdminModal);
+  if (btnCloseAdminModal) btnCloseAdminModal.addEventListener("click", closeAdminModal);
+  if (btnCancelAdminModal) btnCancelAdminModal.addEventListener("click", closeAdminModal);
+
   // Démarrage initial sur l'écran Accueil
   navigateTo("screen-accueil", "Mes parcelles");
   initGeolocation();

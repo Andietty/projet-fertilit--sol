@@ -5,6 +5,53 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   let charts = {};
+  // --- AUTHENTIFICATION ADMIN & MOT DE PASSE ---
+  const ADMIN_PASSWORD = "26INP";
+  const ADMIN_PASSWORD_ALT = "26INPfertilitesol";
+  const authOverlay = document.getElementById("admin-auth-overlay");
+  const authInput = document.getElementById("admin-auth-pwd");
+  const authError = document.getElementById("admin-auth-error");
+
+  function isAuthorized() {
+    return sessionStorage.getItem("agro_admin_authenticated") === "true";
+  }
+
+  function requireAuth() {
+    if (!isAuthorized()) {
+      if (authOverlay) authOverlay.style.display = "flex";
+      if (authInput) setTimeout(() => authInput.focus(), 150);
+    } else {
+      if (authOverlay) authOverlay.style.display = "none";
+    }
+  }
+
+  window.checkAdminAuth = function () {
+    const entered = authInput ? authInput.value.trim() : "";
+    if (entered === ADMIN_PASSWORD || entered === ADMIN_PASSWORD_ALT) {
+      sessionStorage.setItem("agro_admin_authenticated", "true");
+      if (authOverlay) authOverlay.style.display = "none";
+      if (authError) authError.style.display = "none";
+      updateKPIs();
+      renderCharts();
+    } else {
+      if (authError) authError.style.display = "block";
+      if (authInput) {
+        authInput.value = "";
+        authInput.focus();
+      }
+    }
+  };
+
+  const btnLogout = document.getElementById("btn-admin-logout");
+  if (btnLogout) {
+    btnLogout.addEventListener("click", () => {
+      sessionStorage.removeItem("agro_admin_authenticated");
+      if (authInput) authInput.value = "";
+      requireAuth();
+    });
+  }
+
+  requireAuth();
 
   // --- NAVIGATION ENTRE ONGLETS ADMIN ---
   const menuItems = document.querySelectorAll(".menu-item[data-section]");
