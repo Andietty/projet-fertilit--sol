@@ -1,4 +1,4 @@
-const CACHE_NAME = "agrosol-cache-v1";
+const CACHE_NAME = "agrosol-cache-v2";
 const ASSETS_TO_CACHE = [
   "./",
   "./index.html",
@@ -37,13 +37,23 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
-  // Ignorer les requêtes d'API vers l'ESP32 local ou serveur externe
-  if (event.request.url.includes("/api/")) {
+  // Ignorer les requêtes vers l'ESP32 local ou requêtes non-GET
+  if (event.request.method !== "GET" || event.request.url.includes("/api/")) {
     return;
   }
+
+  // Network-First avec fallback Cache (garantit les mises à jour immédiates en ligne)
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      return cachedResponse || fetch(event.request);
-    })
+    fetch(event.request)
+      .then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200) {
+          const responseToCache = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache);
+          });
+        }
+        return networkResponse;
+      })
+      .catch(() => caches.match(event.request))
   );
 });
